@@ -9,12 +9,13 @@ import mpld3
 st.header("Sampling Studio ")
 st.markdown("---")
 
+
 global signal 
-global frequency
-global functionType
-global addFunctionType
-global addFunctionFrequency
-global addFunctionAmplituide
+frequency=0 
+functionType =0
+addFunctionType =0
+addFunctionFrequency =0
+addFunctionAmplituide =0
 amplituide =1
 signalResolution =[0,5]
 
@@ -23,11 +24,13 @@ a1Col3,a1Col4 =st.columns([1,1])
 with a1Col3 :
     signalGeneration =st.checkbox('Generate Signal')
     if(signalGeneration):
-        frequency=st.slider("frequency",min_value=0,max_value=100,step=1)
+        frequency=st.slider("frequency",min_value=0.,max_value=100.,step=0.5)
         #checkBox to add noise to the signal 
         addnoise=st.checkbox("add noise to signal ")
         if(addnoise):
-            SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f")
+            SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f",value=40.)
+
+           
 
 #function to add noise to the signal 
 def getNoise(signal):
@@ -41,6 +44,7 @@ def getNoise(signal):
         return noiseSignal
     else :
         return signal
+
 
 
 with a1Col4 :
@@ -91,8 +95,7 @@ if(signalGeneration):
         chart=st.line_chart(np.zeros(shape=(1,1)))
         numOfPoints=len(time)
         
-        for i in range (int(numOfPoints/10)):
-            y=signal[i:i+11]
-            st.write(type(y))
+        for i in range (int(numOfPoints)):
+            y=signal[i]
             chart.add_rows([y])
             time_library.sleep(0.005)
