@@ -9,22 +9,30 @@ import mpld3
 st.header("Sampling Studio ")
 st.markdown("---")
 
+if 'signal'not in st.session_state:
+    st.session_state['signal']=0
+
 
 global signal 
 frequency=0 
+amplituide =1
+signalResolution =[0,5]
 functionType =0
 addFunctionType =0
 addFunctionFrequency =0
 addFunctionAmplituide =0
-amplituide =1
-signalResolution =[0,5]
+addFunctionButton=False
+removeFunctionButton=False
 
 
-a1Col3,a1Col4 =st.columns([1,1])
-with a1Col3 :
+
+a1Col1,a1Col2 =st.columns([1,1])
+# Area 1 Column number 1
+with a1Col1 :
     signalGeneration =st.checkbox('Generate Signal')
     if(signalGeneration):
         frequency=st.slider("frequency",min_value=0.,max_value=100.,step=0.5)
+        
         #checkBox to add noise to the signal 
         addnoise=st.checkbox("add noise to signal ")
         if(addnoise):
@@ -46,8 +54,8 @@ def getNoise(signal):
         return signal
 
 
-
-with a1Col4 :
+# Area 1 col number 2
+with a1Col2 :
     if(signalGeneration):
         functionType=st.selectbox("choose a signal",("Sine(t)",'Cos(t)'))
         amplituide=st.number_input("Amplituide",max_value=100.,format="%.2F") 
@@ -58,15 +66,29 @@ with a1Col4 :
 a2Col1,a2Col2 =st.columns((3,1))
 
 if(signalGeneration):
-
+    
+    # Area 2 column 2
     with a2Col2 : 
         signaleResolution =st.slider("Resolution",-20,20,(0,5))
-        addFunction =st.checkbox("Add function")
-        if(addFunction):
+        addFunctionCheckBox =st.checkbox("Add function")
+        if(addFunctionCheckBox):
             addFunctionType=st.selectbox("Signal",('Sine(t)','Cos(t)'))
-            addFunctionFrequency=st.slider("Frequqncy :",min_value=0,max_value=100,step=1,value=0)
-            addFunctionAmplituide=st.number_input("Amplituide :",max_value=100.,format='%.2f')
-    
+            addFunctionFrequency=st.slider("Frequqncy :",min_value=0.,max_value=100.,step=0.5,value=1.)
+            addFunctionAmplituide=st.number_input("Amplituide :",max_value=100.,format='%.2f',value=1.)
+            addFunctionButton=st.button("Add function")
+            removeFunctionButton=st.button("Remove function")
+        else :
+            st.session_state['signal']=0
+
+
+    #this function here for adding sine or cosine wave to the signal  
+    def addFunctionMag():
+            if(addFunctionType=="Cos(t)"):
+                phaseshift=np.pi/2
+            else :
+                phaseshift=0
+            return addFunctionAmplituide*np.sin(addFunctionFrequency*time+phaseshift)
+             
     
     time = np.linspace(signaleResolution[0],signaleResolution[1],1000)
     phaseshift=0
@@ -75,15 +97,18 @@ if(signalGeneration):
         phaseshift=np.pi/2
 
     signal=amplituide * np.sin(frequency*time+phaseshift)
-
-    if(addFunction):
-        if(addFunctionType=="Cos(t)"):
-            phaseshift=np.pi/2
-        else :
-            phaseshift=0
-        signal=signal+addFunctionAmplituide*np.sin(addFunctionFrequency*time+phaseshift)
+    
     signal=getNoise(signal)
     
+    if(addFunctionButton):
+        st.session_state['signal']=st.session_state['signal']+addFunctionMag()
+        addFunctionButton=False
+    elif(removeFunctionButton):
+        st.session_state['signal']=st.session_state['signal']-addFunctionMag()
+        removeFunctionButton=False
+    
+    signal=signal+st.session_state['signal']
+
 
     fig=plt.figure()
     plt.plot(time,signal)
@@ -93,9 +118,11 @@ if(signalGeneration):
         htmlFig=mpld3.fig_to_html(fig)
         components.html(htmlFig,height=600)
         chart=st.line_chart(np.zeros(shape=(1,1)))
-        numOfPoints=len(time)
         
-        for i in range (int(numOfPoints)):
-            y=signal[i]
-            chart.add_rows([y])
-            time_library.sleep(0.005)
+        
+        # for making animation graph 
+        # numOfPoints=len(time)
+        # for i in range (int(numOfPoints)):
+        #     y=signal[i]
+        #     chart.add_rows([y])
+        #     time_library.sleep(0.005)
