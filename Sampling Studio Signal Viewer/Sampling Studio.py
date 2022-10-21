@@ -28,8 +28,8 @@ st.markdown("---")
 if 'addedSignals' not in st.session_state: #Storing the added Signals in the memory 
     st.session_state['addedSignals']=[] #we will add in 3 types : type of function then freq then amplituide
 
-if('addedFunctionsListButtons') not in st.session_state:
-    st.session_state['addedFunctionsListButtons']=[0]
+if('addedFunctionsListButtons') not in st.session_state: #Storing the buttons of the added functions to the signal to show them 
+    st.session_state['addedFunctionsListButtons']=[0] #initialization with zero and then we will add the buttons 
 
 
 global signal   #the signal to be generated 
@@ -44,31 +44,31 @@ addFunctionButton=False #The button that is responsible for adding the function 
 removeFunctionButton=False  #The button that is responsible for removing a function from the Signal 
 
 
-removeFromListButtons=st.session_state['addedFunctionsListButtons']
+removeFromListButtons=st.session_state['addedFunctionsListButtons'] #the variable that gets the buttons from the memory
 
-addedFunctionsListCheckBox=st.sidebar.checkbox("added Functions List")
+addedFunctionsListCheckBox=st.sidebar.checkbox("added Functions List") #checkbox in the sidebar for showing the added functions list 
 
 
 # Area number 1 Settin columns
 a1Col1,a1Col2 =st.columns([1,1])
 # Area 1 Column number 1
 with a1Col1 :
-    signalGeneration =st.checkbox('Generate Signal')
+    signalGeneration =st.checkbox('Generate Signal') #checkbox for generating a signal
     if(signalGeneration):
-        frequency=st.slider("frequency",min_value=0.,max_value=100.,step=0.5)
+        frequency=st.slider("frequency",min_value=0.,max_value=100.,step=0.5) #a slider for getting the value of the frequqncy 
         
         #checkBox to add noise to the signal 
-        addnoise=st.checkbox("add noise to signal ")
+        addnoise=st.checkbox("add noise to signal ") #checkbox for being able to add a noise to the function 
         if(addnoise):
-            SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f",value=40.)
+            SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f",value=40.) #input box for entering the SNR in DB
 
 
 #this function for the getting the list of the added functions to the sidebar and also and ability to remove them   
-def writeAddedFunctionsList(): 
-    if(addedFunctionsListCheckBox):
+def write_added_functions_list(): 
+    if(addedFunctionsListCheckBox): #checking the checkbox for showing the list of the added functions in the sidebar  
         index=0
         for functions in st.session_state['addedSignals']:
-            removeFromListButtons.append(0)
+            removeFromListButtons.append(0) 
             functionsListAmplituide=str(functions[2])
             functionsListFrequency=str(functions[1])
             if(functions[0]=='Cos(t)'):
@@ -87,7 +87,7 @@ def writeAddedFunctionsList():
         
 
 #function to add noise to the signal 
-def getNoise(signal):
+def get_noise(signal):
     if(addnoise):
         signalAvgPowerDB=10*np.log10(np.mean(signal**2)) #Getting the average of the power of the signal 
         noiseDB=signalAvgPowerDB-SNR_DB
@@ -129,7 +129,7 @@ if(signalGeneration):
 
 
     #this function here for adding sine or cosine wave to the signal and saving it to the memory 
-    def addFunctionMag():
+    def add_function_mag():
         if(addFunctionType=="Cos(t)"):
             phaseshift=np.pi/2
         else :
@@ -139,13 +139,13 @@ if(signalGeneration):
 
 
     #Add the added Signals to the session state to get them back again
-    def addNewSignal():
+    def add_new_signal():
         signalArray=[addFunctionType,addFunctionFrequency,addFunctionAmplituide]
         st.session_state['addedSignals'].append(signalArray)
 
 
     #Get all the added Signals from the memory 
-    def getAddedSignals():
+    def get_added_signals():
         signalsList=st.session_state['addedSignals']
         addedSignals=0
         global addFunctionFrequency , addFunctionAmplituide , addFunctionType
@@ -153,7 +153,7 @@ if(signalGeneration):
             addFunctionType=signal[0]
             addFunctionFrequency=signal[1]
             addFunctionAmplituide=signal[2]
-            addedSignals+=addFunctionMag()
+            addedSignals+=add_function_mag()
         return addedSignals
 
 
@@ -165,23 +165,23 @@ if(signalGeneration):
 
     signal=amplituide * np.sin(frequency*time+phaseshift)
     
-    signal=getNoise(signal) #adding some noise to the signal 
+    signal=get_noise(signal) #adding some noise to the signal 
     
     if(addFunctionButton):
-        addNewSignal() #add the added Signal to the memory 
+        add_new_signal() #add the added Signal to the memory 
         addFunctionButton=False #Setting the button to false to be ready to another attempt
     
     elif(removeFunctionButton): #Checking if the remove button is clicked or not 
         #remove the signal from the memory        
         addFunctionAmplituide*=-1
-        addNewSignal()
+        add_new_signal()
         removeFunctionButton=False #Setting the button of remove for another attempt
     
     
     # removeFromAddedFunctionList()
-    writeAddedFunctionsList()
+    write_added_functions_list()
 
-    signal=signal+getAddedSignals()
+    signal=signal+get_added_signals()
     
 
 
@@ -192,4 +192,4 @@ if(signalGeneration):
         # st.pyplot(fig)
         htmlFig=mpld3.fig_to_html(fig)
         components.html(htmlFig,height=600)
-        
+
