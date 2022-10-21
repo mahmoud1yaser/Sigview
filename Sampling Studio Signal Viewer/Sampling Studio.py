@@ -28,8 +28,6 @@ st.markdown("---")
 if 'addedSignals' not in st.session_state: #Storing the added Signals in the memory 
     st.session_state['addedSignals']=[] #we will add in 3 types : type of function then freq then amplituide
 
-if('addedFunctionsListButtons') not in st.session_state: #Storing the buttons of the added functions to the signal to show them 
-    st.session_state['addedFunctionsListButtons']=[0] #initialization with zero and then we will add the buttons 
 
 
 global signal   #the signal to be generated 
@@ -44,7 +42,7 @@ addFunctionButton=False #The button that is responsible for adding the function 
 removeFunctionButton=False  #The button that is responsible for removing a function from the Signal 
 
 
-removeFromListButtons=st.session_state['addedFunctionsListButtons'] #the variable that gets the buttons from the memory
+removeFromListButtons=[0] #the variable that saves the list of the buttons of the added functions  
 
 addedFunctionsListCheckBox=st.sidebar.checkbox("added Functions List") #checkbox in the sidebar for showing the added functions list 
 
@@ -82,7 +80,7 @@ def write_added_functions_list():
             index+=1
         if(len(removeFromListButtons)!=0 and index!=0):
             removeFromListButtons.pop(index)
-        st.session_state['addedFunctionsListButtons']=removeFromListButtons
+        
     
         
 
@@ -115,8 +113,8 @@ if(signalGeneration):
     
     # Area 2 column 2
     with a2Col2 : 
-        signaleResolution =st.slider("Resolution",-20,20,(0,5))
-        addFunctionCheckBox =st.checkbox("Add function") 
+        signaleResolution =st.slider("Resolution",min_value=0,max_value=20,value=5,step=1)
+        addFunctionCheckBox =st.checkbox("Add function")
         if(addFunctionCheckBox):
             addFunctionType=st.selectbox("Signal",('Sine(t)','Cos(t)'))
             addFunctionFrequency=st.slider("Frequqncy :",min_value=0.,max_value=100.,step=0.5,value=1.)
@@ -157,7 +155,7 @@ if(signalGeneration):
         return addedSignals
 
 
-    time = np.linspace(signaleResolution[0],signaleResolution[1],1000) 
+    time = np.linspace(0,signaleResolution,1000) 
     phaseshift=0
 
     if(functionType=="Cos(t)"):
