@@ -1,5 +1,4 @@
 from ast import Global
-from requests import session
 import streamlit as st
 import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
@@ -25,10 +24,9 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 st.header("Sampling Studio ")
 st.markdown("---")
 
-
-
-if 'addedSignals' not in st.session_state: #Storing the added Signals in the memory 
-    st.session_state['addedSignals']=[] #we will add in 3 types : type of function then freq then amplituide
+# making new key and store it in streamlit to be able to use it again
+if 'signal'not in st.session_state:
+    st.session_state['signal']=0
 
 
 global signal   #the signal to be generated 
@@ -58,7 +56,7 @@ with a1Col1 :
         if(addnoise):
             SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f",value=40.)
 
-     
+           
 
 #function to add noise to the signal 
 def getNoise(signal):
@@ -98,36 +96,18 @@ if(signalGeneration):
             addFunctionButton=st.button("Add function")
             removeFunctionButton=st.button("Remove function")
         else :
-            del st.session_state['addedSignals']     # saving zero to the memory of the session state
-            st.session_state['addedSignals']=[]
+            st.session_state['signal']=0 # saving zero to the memory of the session state
 
-    #this function here for adding sine or cosine wave to the signal and saving it to the memory 
+
+    #this function here for adding sine or cosine wave to the signal  
     def addFunctionMag():
-        if(addFunctionType=="Cos(t)"):
-            phaseshift=np.pi/2
-        else :
-            phaseshift=0
-        return addFunctionAmplituide*np.sin(addFunctionFrequency*time+phaseshift)
+            if(addFunctionType=="Cos(t)"):
+                phaseshift=np.pi/2
+            else :
+                phaseshift=0
+            return addFunctionAmplituide*np.sin(addFunctionFrequency*time+phaseshift)
              
-
-    #Add the added Signals to the session state to get them back again
-    def addNewSignal():
-        signalArray=[addFunctionType,addFunctionFrequency,addFunctionAmplituide]
-        st.session_state['addedSignals'].append(signalArray)
-
-
-    def getAddedSignals():
-        signalsList=st.session_state['addedSignals']
-        addedSignals=0
-        global addFunctionFrequency , addFunctionAmplituide , addFunctionType
-        for signal in signalsList:
-            addFunctionType=signal[0]
-            addFunctionFrequency=signal[1]
-            addFunctionAmplituide=signal[2]
-            addedSignals+=addFunctionMag()
-        return addedSignals
-
-
+    
     time = np.linspace(signaleResolution[0],signaleResolution[1],1000) 
     phaseshift=0
 
@@ -139,17 +119,16 @@ if(signalGeneration):
     signal=getNoise(signal) #adding some noise to the signal 
     
     if(addFunctionButton):
-        addNewSignal() #add the added Signal to the memory 
+        st.session_state['signal']=st.session_state['signal']+addFunctionMag() #add the added Signal to the memory 
         addFunctionButton=False #Setting the button to false to be ready to another attempt
     
     elif(removeFunctionButton): #Checking if the remove button is clicked or not 
-        #remove the signal from the memory        
-        addFunctionAmplituide*=-1
-        addNewSignal()
+        
+        st.session_state['signal']=st.session_state['signal']-addFunctionMag() #remove the signal from the memory        
         removeFunctionButton=False #Setting the button of remove for another attempt
     
-    signal=signal+getAddedSignals()
-    
+    signal=signal+st.session_state['signal']
+
 
     fig=plt.figure()
     plt.plot(time,signal)
@@ -159,3 +138,11 @@ if(signalGeneration):
         htmlFig=mpld3.fig_to_html(fig)
         components.html(htmlFig,height=600)
         
+
+        # for making animation graph 
+        # chart=st.line_chart(np.zeros(shape=(1,1)))
+        # numOfPoints=len(time)
+        # for i in range (int(numOfPoints)):
+        #     y=signal[i]
+        #     chart.add_rows([y])
+        #     time_library.sleep(0.005)
