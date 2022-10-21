@@ -67,25 +67,22 @@ with a1Col1 :
 def writeAddedFunctionsList(): 
     if(addedFunctionsListCheckBox):
         index=0
-        st.write(st.session_state['addedSignals'])
         for functions in st.session_state['addedSignals']:
             removeFromListButtons.append(0)
             functionsListAmplituide=str(functions[2])
             functionsListFrequency=str(functions[1])
             if(functions[0]=='Cos(t)'):
-                removeFromListButtons[index]=st.sidebar.button(label=str(index+1)+') '+functionsListAmplituide+'Cos('+functionsListFrequency+'t)')
+                removeFromListButtons[index]=st.sidebar.button(label='🗑️ '+str(index+1)+') '+functionsListAmplituide+'Cos('+functionsListFrequency+'t)')
             else :
-                removeFromListButtons[index]=st.sidebar.button(label=str(index+1)+') '+functionsListAmplituide+'Sine('+functionsListFrequency+'t)')
+                removeFromListButtons[index]=st.sidebar.button(label='🗑️ '+str(index+1)+') '+functionsListAmplituide+'Sine('+functionsListFrequency+'t)')
             if(removeFromListButtons[index]):
                 st.session_state['addedSignals'].pop(index)
                 removeFromListButtons.pop(index)
-                
+                st.experimental_rerun()
             index+=1
         if(len(removeFromListButtons)!=0 and index!=0):
-            st.write('poped')
             removeFromListButtons.pop(index)
         st.session_state['addedFunctionsListButtons']=removeFromListButtons
-        st.write(st.session_state['addedSignals'])
     
         
 
