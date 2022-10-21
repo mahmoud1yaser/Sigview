@@ -1,5 +1,3 @@
-from ast import Global
-from requests import session
 import streamlit as st
 import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
@@ -30,6 +28,9 @@ st.markdown("---")
 if 'addedSignals' not in st.session_state: #Storing the added Signals in the memory 
     st.session_state['addedSignals']=[] #we will add in 3 types : type of function then freq then amplituide
 
+if('addedFunctionsListButtons') not in st.session_state:
+    st.session_state['addedFunctionsListButtons']=[0]
+
 
 global signal   #the signal to be generated 
 frequency=0     #the frequency of the generated Signal 
@@ -43,6 +44,9 @@ addFunctionButton=False #The button that is responsible for adding the function 
 removeFunctionButton=False  #The button that is responsible for removing a function from the Signal 
 
 
+removeFromListButtons=st.session_state['addedFunctionsListButtons']
+
+addedFunctionsListCheckBox=st.sidebar.checkbox("added Functions List")
 
 
 # Area number 1 Settin columns
@@ -58,7 +62,32 @@ with a1Col1 :
         if(addnoise):
             SNR_DB=st.number_input("SNR DB",min_value=0.,max_value=100.,format="%.2f",value=40.)
 
-     
+
+#this function for the getting the list of the added functions to the sidebar and also and ability to remove them   
+def writeAddedFunctionsList(): 
+    if(addedFunctionsListCheckBox):
+        index=0
+        st.write(st.session_state['addedSignals'])
+        for functions in st.session_state['addedSignals']:
+            removeFromListButtons.append(0)
+            functionsListAmplituide=str(functions[2])
+            functionsListFrequency=str(functions[1])
+            if(functions[0]=='Cos(t)'):
+                removeFromListButtons[index]=st.sidebar.button(label=str(index+1)+') '+functionsListAmplituide+'Cos('+functionsListFrequency+'t)')
+            else :
+                removeFromListButtons[index]=st.sidebar.button(label=str(index+1)+') '+functionsListAmplituide+'Sine('+functionsListFrequency+'t)')
+            if(removeFromListButtons[index]):
+                st.session_state['addedSignals'].pop(index)
+                removeFromListButtons.pop(index)
+                
+            index+=1
+        if(len(removeFromListButtons)!=0 and index!=0):
+            st.write('poped')
+            removeFromListButtons.pop(index)
+        st.session_state['addedFunctionsListButtons']=removeFromListButtons
+        st.write(st.session_state['addedSignals'])
+    
+        
 
 #function to add noise to the signal 
 def getNoise(signal):
@@ -101,6 +130,7 @@ if(signalGeneration):
             del st.session_state['addedSignals']     # saving zero to the memory of the session state
             st.session_state['addedSignals']=[]
 
+
     #this function here for adding sine or cosine wave to the signal and saving it to the memory 
     def addFunctionMag():
         if(addFunctionType=="Cos(t)"):
@@ -110,12 +140,14 @@ if(signalGeneration):
         return addFunctionAmplituide*np.sin(addFunctionFrequency*time+phaseshift)
              
 
+
     #Add the added Signals to the session state to get them back again
     def addNewSignal():
         signalArray=[addFunctionType,addFunctionFrequency,addFunctionAmplituide]
         st.session_state['addedSignals'].append(signalArray)
 
 
+    #Get all the added Signals from the memory 
     def getAddedSignals():
         signalsList=st.session_state['addedSignals']
         addedSignals=0
@@ -148,8 +180,13 @@ if(signalGeneration):
         addNewSignal()
         removeFunctionButton=False #Setting the button of remove for another attempt
     
+    
+    # removeFromAddedFunctionList()
+    writeAddedFunctionsList()
+
     signal=signal+getAddedSignals()
     
+
 
     fig=plt.figure()
     plt.plot(time,signal)
