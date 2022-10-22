@@ -20,7 +20,7 @@ footer {visibility: hidden;}
 with open('css/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-header_code = (open("header.html", 'r', encoding='utf-8')).read()
+header_code = (open("templates/header.html", 'r', encoding='utf-8')).read()
 st.markdown(f'{header_code}', unsafe_allow_html=True)
 
 plt.style.use("ggplot")
