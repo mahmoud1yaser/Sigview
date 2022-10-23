@@ -1,3 +1,4 @@
+from pickle import NONE
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -34,6 +35,8 @@ show_history = st.sidebar.checkbox("Show History")
 if 'addedSignals' not in st.session_state:  # Storing the added Signals in the memory
     st.session_state['addedSignals'] = []  # we will add in 3 types : type of function then freq then amplituide
 
+if 'viewAddedSignalButton' not in st.session_state:
+    st.session_state['viewAddedSignalButton']=True
 
 def cb_generate_active():
     st.session_state.cb_generate = True
@@ -147,9 +150,15 @@ with st.container():
 
     uploaded_df = pd.DataFrame()
     if uploaded_csv is not None:
+        if(st.session_state['viewAddedSignalButton']):
+           st.session_state['viewAddedSignalButton']=False
+           st.experimental_rerun()
         uploaded_df = pd.read_csv(uploaded_csv)
         if len(uploaded_df) >= 1:
             df = uploaded_df.iloc[:int(signalRange)]
+    elif(not st.session_state['viewAddedSignalButton']):
+            st.session_state['viewAddedSignalButton']=True
+            st.experimental_rerun()
     with st.container():
         if st.session_state["cb_add"]:
             right_up_col.markdown(' <center> <h3> Add Signal </h3> </center>', unsafe_allow_html=True)
@@ -159,7 +168,8 @@ with st.container():
                                                   on_change=cb_add_active, max_value=200., step=0.5)
             add_slider_amp = right_up_col.slider('Amplitude', value=1.,
                                                  on_change=cb_add_active, max_value=200., step=0.5)
-            add_btn_submit = right_up_col.button('Add Signal', on_click=cb_add_active)
+            if(st.session_state['viewAddedSignalButton']):
+                add_btn_submit = right_up_col.button('Add Signal', on_click=cb_add_active)
             st.session_state['func_type'] = add_combo_type
             st.session_state['time'] = np.linspace(0, signalRange, 1000)
             st.session_state.addFunctionButton = False
@@ -324,7 +334,7 @@ with st.container():
             fig_sec = px.line(x=st.session_state['time'], y=st.session_state['amplitude_post'], height=820,
                               labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
             st.session_state.reconsFunctionButton = True
-        elif add_btn_submit:
+        elif cb_add and type(st.session_state['amplitude_sum'])!=int :
             fig_sec = px.line(x=st.session_state['time'], y=st.session_state['amplitude_sum'], height=820,
                               labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
         else:
