@@ -121,9 +121,6 @@ with st.container():
         st.session_state['time'] = np.zeros(signalRange)
     if 'amplitude' not in st.session_state:
         st.session_state['amplitude'] = np.zeros(signalRange)
-    # if 'amplitude_post' not in st.session_state:
-    #     st.session_state['amplitude_post'] = np.zeros(signalRange)
-
 
     def write_added_functions_list():
         if show_history:  # checking the checkbox for showing the list of the added functions in the sidebar
@@ -146,6 +143,7 @@ with st.container():
                 index += 1
             if len(removeFromListButtons) != 0 and index != 0:
                 removeFromListButtons.pop(index)
+
 
     uploaded_df = pd.DataFrame()
     if uploaded_csv is not None:
@@ -191,6 +189,7 @@ with st.container():
                     addedSignals += add_function_mag()
                 return addedSignals
 
+
             phase_angle = 0
             if st.session_state['func_type'] == "Cosine":
                 phase_angle = np.pi / 2
@@ -206,7 +205,6 @@ with st.container():
             write_added_functions_list()
 
             st.session_state['amplitude_sum'] = get_added_signals()
-
 
         elif st.session_state["cb_snr"]:
             if 'func_type' not in st.session_state:
@@ -252,10 +250,12 @@ with st.container():
 
                 if 'time_sampled' not in st.session_state:
                     st.session_state['time_sampled'] = \
-                        np.zeros(int((len(st.session_state['time']) / st.session_state['time'][-1]) / sample_number_main))
+                        np.zeros(
+                            int((len(st.session_state['time']) / st.session_state['time'][-1]) / sample_number_main))
                 if 'amplitude_sampled' not in st.session_state:
                     st.session_state['amplitude_sampled'] = \
-                        np.zeros(int((len(st.session_state['time']) / st.session_state['time'][-1]) / sample_number_main))
+                        np.zeros(
+                            int((len(st.session_state['time']) / st.session_state['time'][-1]) / sample_number_main))
 
                 st.session_state['time_sampled'], st.session_state['amplitude_sampled'] = \
                     sample(st.session_state['time'], st.session_state['amplitude'], sample_number_main)
@@ -321,27 +321,28 @@ with st.container():
 
     with st.container():
         if sample_btn_recons:
-            fig_main = px.line(x=st.session_state['time'], y=st.session_state['amplitude_post'], height=820,
-                               labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
+            fig_sec = px.line(x=st.session_state['time'], y=st.session_state['amplitude_post'], height=820,
+                              labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
             st.session_state.reconsFunctionButton = True
         elif add_btn_submit:
-            fig_main = px.line(x=st.session_state['time'], y=st.session_state['amplitude_sum'], height=820,
-                               labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
+            fig_sec = px.line(x=st.session_state['time'], y=st.session_state['amplitude_sum'], height=820,
+                              labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
         else:
-            fig_main = px.line(x=[0, 0], y=[0, 0], height=780,
-                               labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
-        fig_main.update_layout(title_text='Accumulative Viewer', title_x=0.5, font=dict(
+            fig_sec = px.line(x=[0, 0], y=[0, 0], height=780,
+                              labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
+        fig_sec.update_layout(title_text='Accumulative Viewer', title_x=0.5, font=dict(
             family="Sans serif",
             size=15,
             color="white", ))
-        fig_main.update_traces(line_color='#2596be')
-        st.plotly_chart(fig_main, use_container_width=True)
+        fig_sec.update_traces(line_color='#2596be')
+        st.plotly_chart(fig_sec, use_container_width=True)
 
     with st.container():
         @st.cache
         def convert_df(df_temp):
             # IMPORTANT: Cache the conversion to prevent computation on every rerun
             return df_temp.to_csv().encode('utf-8')
+
 
         _, save_added, save_gen, save_recon, _ = st.columns([6, 3, 3, 3, 6])
 
@@ -376,4 +377,3 @@ with st.container():
             data=csv_added,
             file_name='sigview_added.csv',
             mime='text/csv')
-
