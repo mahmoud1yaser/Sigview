@@ -206,9 +206,7 @@ with st.container():
             write_added_functions_list()
 
             st.session_state['amplitude_sum'] = get_added_signals()
-            df_save_added = pd.DataFrame()
-            df_save_added['time'] = st.session_state['time']
-            df_save_added['amplitude'] = st.session_state['amplitude_sum']
+
 
         elif st.session_state["cb_snr"]:
             if 'func_type' not in st.session_state:
@@ -323,9 +321,6 @@ with st.container():
 
     with st.container():
         if sample_btn_recons:
-            df_save_recon = pd.DataFrame()
-            df_save_recon['time'] = st.session_state['time']
-            df_save_recon['amplitude'] = st.session_state['amplitude_post']
             fig_main = px.line(x=st.session_state['time'], y=st.session_state['amplitude_post'], height=820,
                                labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
             st.session_state.reconsFunctionButton = True
@@ -361,6 +356,9 @@ with st.container():
             mime='text/csv')
 
     if ('amplitude_post' in st.session_state) and st.session_state.reconsFunctionButton:
+        df_save_recon = pd.DataFrame()
+        df_save_recon['time'] = st.session_state['time']
+        df_save_recon['amplitude'] = st.session_state['amplitude_post']
         csv_recon = convert_df(df_save_recon)
         save_recon.download_button(
             label="Download recons data as CSV",
@@ -369,6 +367,9 @@ with st.container():
             mime='text/csv')
 
     if ('amplitude_sum' in st.session_state) and st.session_state.addFunctionButton:
+        df_save_added = pd.DataFrame()
+        df_save_added['time'] = st.session_state['time']
+        df_save_added['amplitude'] = st.session_state['amplitude_sum']
         csv_added = convert_df(df_save_added)
         save_added.download_button(
             label="Download added data as CSV",
