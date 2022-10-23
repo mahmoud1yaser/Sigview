@@ -170,6 +170,9 @@ with st.container():
                                                  on_change=cb_add_active, max_value=200., step=0.5)
             if(st.session_state['viewAddedSignalButton']):
                 add_btn_submit = right_up_col.button('Add Signal', on_click=cb_add_active)
+            else :
+                st.session_state['addedSignals']=[]    
+
             st.session_state['func_type'] = add_combo_type
             st.session_state['time'] = np.linspace(0, signalRange, 1000)
             st.session_state.addFunctionButton = False
