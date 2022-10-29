@@ -21,11 +21,19 @@ For every digital signal processing system, sampling analog signals is crucial. 
 
 ## Features:
   * Browsing signals from saved ones.
+  * Controlling signals by changing amplitude from (0:150) and frequency from(0:150hz).
+  * controling Nyquist frequency in range (0.50:1.5).
+  * controling signal to noise ratio (SNR) in range of (1:60dB).
+  * Choosing type of signal you want to add.
   * Adding new signals and removing added ones from user-defined signal
-  * Controlling signals by changing amplitude and frequency.
-  * Adding noise to signal.
   * Saving the generated signals.
   * Resizing/rescaling window.
+  * for the signal plot:
+      **you can select the signal you want to show from 4 check boxes:
+          ***main signal
+          ***added signal
+          ***reconstructed signal
+          ***samples
 
 
 ## Demo:
