@@ -117,21 +117,22 @@ def signal_recons(time, sampled_time, sampled_amplitude):
 
 # Convert to nyquist frequency function
 def convert_to_nyquist():
-    if st.session_state['signal_sampling_frequency'] == 0.5:
-        if len(st.session_state['frequencies']) > 0:
-            st.session_state['sampling_frequency'] = max(st.session_state['frequencies'])
-        else:
-            st.session_state['sampling_frequency'] = st.session_state['signal_frequency']
-    elif st.session_state['signal_sampling_frequency'] == 1.0:
-        if len(st.session_state['frequencies']) > 0:
-            st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
-        else:
-            st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
-    elif st.session_state['signal_sampling_frequency'] == 1.5:
-        if len(st.session_state['frequencies']) > 0:
-            st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
-        else:
-            st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
+    if not uploaded_csv:
+        if st.session_state['signal_sampling_frequency'] == 0.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 1.0:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 1.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
 
 
 # Adding layout to our page
@@ -140,7 +141,7 @@ toolbox_container = st.container()
 
 with show_signals_container:
     browse_position, save_position, _, show_main_signal_position, show_added_signal_position, show_recons_position, \
-    show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1.3, 1])
+        show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1.3, 1])
 
     uploaded_csv = browse_position.file_uploader("Browse", type='csv', label_visibility='collapsed')
     # browse_position.markdown('<h3 style="text-align: center"> Toolbox </h3>', unsafe_allow_html=True)
@@ -193,7 +194,6 @@ with toolbox_container:
                                                                              st.session_state['time']) + phase),
                                                   signal_snr)
 
-
     # Added signal
     def write_added_functions_list():
         if show_history:  # checking the checkbox for showing the list of the added functions in the sidebar
@@ -235,7 +235,6 @@ with toolbox_container:
         st.session_state['addedSignals'].append(signalArray)
         # Store all frequencies to get maximum frequency to find nyquist rate
         st.session_state['frequencies'].append(signal_frequency)
-
 
     # Get all the added Signals from the memory
     def get_added_signals():
