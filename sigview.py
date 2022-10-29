@@ -65,16 +65,20 @@ margin-left: calc(0.5rem); }
 # Style our plot
 plt.style.use("ggplot")
 
-# Define constants
-removeFromListButtons = [0]  # the variable that saves the list of the buttons of the added functions
-# checkbox in the sidebar for showing the added functions list
-show_history = st.sidebar.checkbox("Show History")
+
 if 'addedSignals' not in st.session_state:  # Storing the added Signals in the memory
     st.session_state['addedSignals'] = []  # we will add in 3 types : type of function then freq then amplituide
 if 'frequencies' not in st.session_state:
     st.session_state['frequencies'] = []
 if 'sampling_frequency' not in st.session_state:
     st.session_state['sampling_frequency'] = 3.
+
+
+def clearAllData():
+    st.session_state['addedSignals']=[]
+    st.session_state['frequencies']=[]
+    st.session_state['sampling_frequency']=3
+    st.experimental_rerun()
 
 
 def addedSignalsList():
@@ -217,29 +221,6 @@ with toolbox_container:
                                                                              st.session_state['time']) + phase),
                                                   signal_snr)
 
-
-    # Added signal
-    def write_added_functions_list():
-        if show_history:  # checking the checkbox for showing the list of the added functions in the sidebar
-            index = 0
-            for functions in st.session_state['addedSignals']:
-                removeFromListButtons.append(0)
-                functionsListFreq = str(functions[1])
-                functionsListAmp = str(functions[2])
-                if functions[0] == 'cos(t)':
-                    removeFromListButtons[index] = st.sidebar.button(label='🗑️ ' + str(
-                        index + 1) + ') ' + functionsListAmp + '*cos(2π(' + functionsListFreq + ')t)')
-                else:
-                    removeFromListButtons[index] = st.sidebar.button(label='🗑️ ' + str(
-                        index + 1) + ') ' + functionsListAmp + '*sin(2π(' + functionsListFreq + ')t)')
-                if removeFromListButtons[index]:
-                    st.session_state['addedSignals'].pop(index)
-                    removeFromListButtons.pop(index)
-                    st.experimental_rerun()
-                index += 1
-            if len(removeFromListButtons) != 0 and index != 0:
-                removeFromListButtons.pop(index)
-
     # this function here for adding sine or cosine wave to the signal and saving it to the memory
     def add_function_mag():
         if signal_type == "cos(t)":
@@ -279,8 +260,6 @@ with toolbox_container:
         st.experimental_rerun()
         # st.session_state['maximum_frequency'] = max(st.session_state['frequencies'])
 
-    # removeFromAddedFunctionList()
-    write_added_functions_list()
     st.session_state['amplitude_added'] = get_added_signals()
 
     # Sampling code
@@ -352,4 +331,6 @@ with toolbox_container:
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
 
-    save_position.button('Reset ↻')
+    reset_button=save_position.button('Reset 🔄')
+    if(reset_button):
+        clearAllData()
