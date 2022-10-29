@@ -76,25 +76,25 @@ if 'frequencies' not in st.session_state:
 if 'sampling_frequency' not in st.session_state:
     st.session_state['sampling_frequency'] = 3.
 
+
 def addedSignalsList():
-    addedSignals=st.session_state['addedSignals']
-    signals=[]
+    addedSignals = st.session_state['addedSignals']
+    signals = []
     for signal in addedSignals:
-        if(signal[0]=='sin(t)'):
-            signals.append(str(signal[2])+'sin('+str(signal[1])+'t)')
-        else :
-            signals.append(str(signal[2])+'cos('+str(signal[1])+')t')
+        if signal[0] == 'sin(t)':
+            signals.append(str(signal[2]) + '*sin(2π(' + str(signal[1]) + ')t)')
+        else:
+            signals.append(str(signal[2]) + '*cos(2π(' + str(signal[1]) + ')t')
     return signals
 
 
-def removeAddedSignals(removeSignalList,selectedSignal):
-    index=0
+def removeAddedSignals(removeSignalList, selectedSignal):
+    index = 0
     for signal in removeSignalList:
-        if(signal==selectedSignal):
+        if signal == selectedSignal:
             st.session_state['addedSignals'].pop(index)
             st.experimental_rerun()
-        index+=1
-
+        index += 1
 
 
 # Define functions
@@ -189,12 +189,12 @@ with toolbox_container:
     with toolbox_right_position:
         signal_amplitude = st.slider('Amplitude', min_value=1., max_value=150., step=0.5)
         signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, value=60, step=1)
-        
-        added_signals_list=addedSignalsList()
-        signal_history = st.selectbox("Signals",added_signals_list, index=0)
+
+        added_signals_list = addedSignalsList()
+        signal_history = st.selectbox("Signals", added_signals_list, index=0)
         signal_remove = st.button('Remove Signal')
-        if(signal_remove):
-             removeAddedSignals(added_signals_list,signal_history)
+        if signal_remove:
+            removeAddedSignals(added_signals_list, signal_history)
     # Upload signal
     uploaded_df = pd.DataFrame()
     if uploaded_csv is not None:
@@ -214,8 +214,8 @@ with toolbox_container:
         if signal_type == "cos(t)":
             phase = np.pi / 2
         st.session_state['amplitude'] = add_noise(signal_amplitude * np.sin((2 * np.pi * signal_frequency *
-                                                                             st.session_state['time']) + phase),
-                                                  signal_snr)
+                                                                             st.session_state['time']) + phase), signal_snr)
+
 
     # Added signal
     def write_added_functions_list():
@@ -227,10 +227,10 @@ with toolbox_container:
                 functionsListAmp = str(functions[2])
                 if functions[0] == 'cos(t)':
                     removeFromListButtons[index] = st.sidebar.button(label='🗑️ ' + str(
-                        index + 1) + ') ' + functionsListAmp + 'cos(2π' + functionsListFreq + 't)')
+                        index + 1) + ') ' + functionsListAmp + '*cos(2π(' + functionsListFreq + ')t)')
                 else:
                     removeFromListButtons[index] = st.sidebar.button(label='🗑️ ' + str(
-                        index + 1) + ') ' + functionsListAmp + 'sin(2π' + functionsListFreq + 't)')
+                        index + 1) + ') ' + functionsListAmp + '*sin(2π(' + functionsListFreq + ')t)')
                 if removeFromListButtons[index]:
                     st.session_state['addedSignals'].pop(index)
                     removeFromListButtons.pop(index)
@@ -238,6 +238,7 @@ with toolbox_container:
                 index += 1
             if len(removeFromListButtons) != 0 and index != 0:
                 removeFromListButtons.pop(index)
+
 
     # this function here for adding sine or cosine wave to the signal and saving it to the memory
     def add_function_mag():
@@ -258,6 +259,7 @@ with toolbox_container:
         st.session_state['addedSignals'].append(signalArray)
         # Store all frequencies to get maximum frequency to find nyquist rate
         st.session_state['frequencies'].append(signal_frequency)
+
 
     # Get all the added Signals from the memory
     def get_added_signals():
@@ -349,4 +351,5 @@ with toolbox_container:
         data=csv,
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
-    
+
+    save_position.button('Reset ↻')
