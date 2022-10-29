@@ -2,7 +2,7 @@
 #    Digital Signal processing course
 #    Task-1
 
-# sampling-studio
+# Title: Sampling-Studio
 A digital signal processing website using streamlit, HTML and CSS where users browse or generate a signal to sample , and can reconstruct it based on The Nyquist–Shannon sampling theorem.
 
 ## Team Members
@@ -12,7 +12,7 @@ A digital signal processing website using streamlit, HTML and CSS where users br
   * Shirouq Shawky  -Sec: 1   -BN:  46
 
 ## About:
- #### Team 9
+ #### Team No.9
  We are class of 2024 biomedical engineering, Cairo university. We have designed this website for anyone who
  is interested in signal processing. Our website deals with the signals by plotting an original signal and controlling
  its feature through many parameters, any change in these parameters will be shown in the plot. We deal with sampled signals
