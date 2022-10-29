@@ -1,6 +1,3 @@
-from random import randint
-
-import pyautogui as pyautogui
 import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
