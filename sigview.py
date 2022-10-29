@@ -1,3 +1,6 @@
+from random import randint
+
+import pyautogui as pyautogui
 import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -18,6 +21,7 @@ st.markdown("""
 MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 .css-7oyrr6.euu6i2w0 {visibility: hidden;}
+.css-1aehpvj.euu6i2w0 {visibility: hidden;}
 .css-x8wxsk {
    padding: 0.5rem;
 }
@@ -65,20 +69,12 @@ margin-left: calc(0.5rem); }
 # Style our plot
 plt.style.use("ggplot")
 
-
 if 'addedSignals' not in st.session_state:  # Storing the added Signals in the memory
     st.session_state['addedSignals'] = []  # we will add in 3 types : type of function then freq then amplituide
 if 'frequencies' not in st.session_state:
     st.session_state['frequencies'] = []
 if 'sampling_frequency' not in st.session_state:
     st.session_state['sampling_frequency'] = 3.
-
-
-def clearAllData():
-    st.session_state['addedSignals']=[]
-    st.session_state['frequencies']=[]
-    st.session_state['sampling_frequency']=3
-    st.experimental_rerun()
 
 
 def addedSignalsList():
@@ -195,7 +191,7 @@ with toolbox_container:
         signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, value=60, step=1)
 
         added_signals_list = addedSignalsList()
-        signal_history = st.selectbox("Signals", added_signals_list, index=0)
+        signal_history = st.selectbox("Added Signals", added_signals_list)
         signal_remove = st.button('Remove Signal')
         if signal_remove:
             removeAddedSignals(added_signals_list, signal_history)
@@ -241,7 +237,6 @@ with toolbox_container:
         # Store all frequencies to get maximum frequency to find nyquist rate
         st.session_state['frequencies'].append(signal_frequency)
 
-
     # Get all the added Signals from the memory
     def get_added_signals():
         signalsList = st.session_state['addedSignals']
@@ -258,7 +253,6 @@ with toolbox_container:
     if signal_add:
         add_new_signal()  # add the added Signal to the memory
         st.experimental_rerun()
-        # st.session_state['maximum_frequency'] = max(st.session_state['frequencies'])
 
     st.session_state['amplitude_added'] = get_added_signals()
 
@@ -331,6 +325,8 @@ with toolbox_container:
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
 
-    reset_button=save_position.button('Reset 🔄')
-    if(reset_button):
-        clearAllData()
+    reset_button = save_position.button('Reset 🔄')
+    if reset_button:
+        for key in st.session_state:
+            del st.session_state[key]
+        st.experimental_rerun()
