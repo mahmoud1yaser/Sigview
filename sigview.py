@@ -161,7 +161,7 @@ toolbox_container = st.container()
 
 with show_signals_container:
     browse_position, save_position, _, show_main_signal_position, show_added_signal_position, show_recons_position, \
-        show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1.3, 1])
+    show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1.3, 1])
 
     uploaded_csv = browse_position.file_uploader("Browse", type='csv', label_visibility='collapsed')
     # browse_position.markdown('<h3 style="text-align: center"> Toolbox </h3>', unsafe_allow_html=True)
@@ -214,7 +214,8 @@ with toolbox_container:
         if signal_type == "cos(t)":
             phase = np.pi / 2
         st.session_state['amplitude'] = add_noise(signal_amplitude * np.sin((2 * np.pi * signal_frequency *
-                                                                             st.session_state['time']) + phase), signal_snr)
+                                                                             st.session_state['time']) + phase),
+                                                  signal_snr)
 
 
     # Added signal
@@ -238,7 +239,6 @@ with toolbox_container:
                 index += 1
             if len(removeFromListButtons) != 0 and index != 0:
                 removeFromListButtons.pop(index)
-
 
     # this function here for adding sine or cosine wave to the signal and saving it to the memory
     def add_function_mag():
