@@ -285,14 +285,12 @@ with toolbox_container:
     # Data for plotting
     with main_graph_position:
         fig_sec = px.line(x=[0, 0], y=[0, 0], labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
+        fig_sec.update_layout(title_text='Signal Plot', title_x=0.5, font=dict(
+            family="Sans serif",
+            size=15, ))
         if show_main:
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude'], name="Main Signal",
                                 marker=dict(size=10, color="#3C69E7"))
-            fig_sec.update_layout(title_text='Signal Plot', title_x=0.5, font=dict(
-                family="Sans serif",
-                size=15,
-                color="white"))
-
         if show_added_signal and len(st.session_state['addedSignals']) > 0:
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude_added'], name="Added Signal",
                                 marker=dict(size=10, color='#00FFFF'))
