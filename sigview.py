@@ -328,5 +328,3 @@ with toolbox_container:
         data=csv,
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
-
-    print(st.session_state['sampling_frequency'])
