@@ -76,6 +76,26 @@ if 'frequencies' not in st.session_state:
 if 'sampling_frequency' not in st.session_state:
     st.session_state['sampling_frequency'] = 3.
 
+def addedSignalsList():
+    addedSignals=st.session_state['addedSignals']
+    signals=[]
+    for signal in addedSignals:
+        if(signal[0]=='sin(t)'):
+            signals.append(str(signal[2])+'sin('+str(signal[1])+'t)')
+        else :
+            signals.append(str(signal[2])+'cos('+str(signal[1])+')t')
+    return signals
+
+
+def removeAddedSignals(removeSignalList,selectedSignal):
+    index=0
+    for signal in removeSignalList:
+        if(signal==selectedSignal):
+            st.session_state['addedSignals'].pop(index)
+            st.experimental_rerun()
+        index+=1
+
+
 
 # Define functions
 # Signal to Noise Ratio Code
@@ -169,9 +189,12 @@ with toolbox_container:
     with toolbox_right_position:
         signal_amplitude = st.slider('Amplitude', min_value=1., max_value=150., step=0.5)
         signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, value=60, step=1)
-        signal_history = st.selectbox("Signals", ['sig1', 'sig2'], index=0)
+        
+        added_signals_list=addedSignalsList()
+        signal_history = st.selectbox("Signals",added_signals_list, index=0)
         signal_remove = st.button('Remove Signal')
-
+        if(signal_remove):
+             removeAddedSignals(added_signals_list,signal_history)
     # Upload signal
     uploaded_df = pd.DataFrame()
     if uploaded_csv is not None:
@@ -251,6 +274,7 @@ with toolbox_container:
 
     if signal_add:
         add_new_signal()  # add the added Signal to the memory
+        st.experimental_rerun()
         # st.session_state['maximum_frequency'] = max(st.session_state['frequencies'])
 
     # removeFromAddedFunctionList()
@@ -325,3 +349,4 @@ with toolbox_container:
         data=csv,
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
+    
