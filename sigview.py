@@ -71,7 +71,17 @@ if 'addedSignals' not in st.session_state:  # Storing the added Signals in the m
 if 'frequencies' not in st.session_state:
     st.session_state['frequencies'] = []
 if 'sampling_frequency' not in st.session_state:
-    st.session_state['sampling_frequency'] = 3.
+    st.session_state['sampling_frequency'] = 1.
+if 'signal_sampling_frequency' not in st.session_state:
+    st.session_state['signal_sampling_frequency'] = 0.5
+if 'signal_snr' not in st.session_state:
+    st.session_state['signal_snr'] = 60
+if 'signal_type' not in st.session_state:
+    st.session_state['signal_type'] = 'sin(t)'
+if 'signal_frequency' not in st.session_state:
+    st.session_state['signal_frequency'] = 1.
+if 'signal_amplitude' not in st.session_state:
+    st.session_state['signal_amplitude'] = 1.
 
 
 def addedSignalsList():
@@ -142,14 +152,14 @@ def convert_to_nyquist():
                 st.session_state['sampling_frequency'] = st.session_state['signal_frequency']
         elif st.session_state['signal_sampling_frequency'] == 1.0:
             if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 2 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 2 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 1.5:
+            if len(st.session_state['frequencies']) > 0:
                 st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
             else:
                 st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 1.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
 
 
 # Adding layout to our page
@@ -175,17 +185,17 @@ with toolbox_container:
                                      on_change=convert_to_nyquist)
         if uploaded_csv:
             st.session_state['sampling_frequency'] = st.slider('Sampling Frequency', min_value=1.0, max_value=150.,
-                                                               value=1.0, step=.1)
+                                                               step=.5, on_change=convert_to_nyquist, value=1.0)
         else:
-            signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=1.5, value=0.5,
+            signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=1.5,
                                                   step=.5, on_change=convert_to_nyquist,
                                                   key="signal_sampling_frequency")
-        signal_type = st.selectbox("Signal Type", ['sin(t)', 'cos(t)'], index=0)
+        signal_type = st.selectbox("Signal Type", ['sin(t)', 'cos(t)'], key='signal_type')
         signal_add = st.button('Add Signal')
 
     with toolbox_right_position:
-        signal_amplitude = st.slider('Amplitude', min_value=1., max_value=150., step=0.5)
-        signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, value=60, step=1)
+        signal_amplitude = st.slider('Amplitude', min_value=1., max_value=150., step=0.5, key='signal_amplitude')
+        signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, step=1, key='signal_snr')
 
         added_signals_list = addedSignalsList()
         signal_history = st.selectbox("Added Signals", added_signals_list)
@@ -198,7 +208,7 @@ with toolbox_container:
         df = pd.read_csv(uploaded_csv)
         if ('time' in df.columns) and ('amplitude' in df.columns):
             st.session_state['time'] = np.array(df['time'])
-            st.session_state['amplitude'] = add_noise(np.array(df['amplitude']), signal_snr)
+            st.session_state['amplitude'] = add_noise(np.array(df['amplitude']), st.session_state['signal_snr'])
         else:
             browse_position.error(f'The csv file has to contain time and amplitude columns', icon="⚠️")
         if len(df) > 0:
@@ -210,9 +220,10 @@ with toolbox_container:
         phase = 0
         if signal_type == "cos(t)":
             phase = np.pi / 2
-        st.session_state['amplitude'] = add_noise(signal_amplitude * np.sin((2 * np.pi * signal_frequency *
-                                                                             st.session_state['time']) + phase),
-                                                  signal_snr)
+        st.session_state['amplitude'] = add_noise(st.session_state.signal_amplitude *
+                                                  np.sin((2 * np.pi * st.session_state.signal_frequency *
+                                                          st.session_state['time']) + phase),
+                                                  st.session_state.signal_snr)
 
     # this function here for adding sine or cosine wave to the signal and saving it to the memory
     def add_function_mag():
@@ -221,11 +232,13 @@ with toolbox_container:
         else:
             phase_degree = 0
         if not uploaded_csv:
-            return add_noise(signal_amplitude * np.sin(2 * np.pi * signal_frequency * st.session_state['time'] +
-                                                       phase_degree), signal_snr)
+            return add_noise(st.session_state.signal_amplitude * np.sin(
+                2 * np.pi * st.session_state.signal_frequency * st.session_state['time'] +
+                phase_degree), st.session_state.signal_snr)
         else:
-            return add_noise(signal_amplitude * np.sin(2 * np.pi * signal_frequency * st.session_state['time'] +
-                                                       phase_degree) + st.session_state['amplitude'], signal_snr)
+            return add_noise(st.session_state.signal_amplitude * np.sin(
+                2 * np.pi * st.session_state.signal_frequency * st.session_state['time'] +
+                phase_degree) + st.session_state['amplitude'], st.session_state.signal_snr)
 
 
     def add_new_signal():
@@ -233,6 +246,7 @@ with toolbox_container:
         st.session_state['addedSignals'].append(signalArray)
         # Store all frequencies to get maximum frequency to find nyquist rate
         st.session_state['frequencies'].append(signal_frequency)
+
 
     # Get all the added Signals from the memory
     def get_added_signals():
@@ -317,13 +331,15 @@ with toolbox_container:
     df_save['amplitude'] = st.session_state['amplitude_recons']
     csv = convert_df(df_save)
     save_position.download_button(
-        label="Save",
+        label="💾",
         data=csv,
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
 
-    reset_button = save_position.button('Reset 🔄')
+    save_position.markdown('<br>', unsafe_allow_html=True)
+    reset_button = save_position.button('🔄')
     if reset_button:
+        st.session_state['sampling_frequency'] = 1
         for key in st.session_state:
             del st.session_state[key]
         st.experimental_rerun()
