@@ -28,12 +28,12 @@ For every digital signal processing system, sampling analog signals is crucial. 
   * Adding new signals and removing added ones from user-defined signal
   * Saving the generated signals.
   * Resizing/rescaling window.
-  * for the signal plot:
-      **you can select the signal you want to show from 4 check boxes:
-          ***main signal
-          ***added signal
-          ***reconstructed signal
-          ***samples
+  * For the signal plot:
+      ** you can select the signal you want to show from 4 check boxes:
+          *** Main signal
+          *** Added signal
+          *** Reconstructed signal
+          *** Samples
 
 
 ## Demo:
