@@ -43,8 +43,8 @@ For every digital signal processing system, sampling analog signals is crucial. 
       - Samples
 
 
-## Demo:
-SigView.gif
+ ## Demo:
+![](https://github.com/mahmoud1yaser/DSP_Task1_-9-/blob/main/videos/SigView.gif)
 
  
 
