@@ -152,14 +152,14 @@ def convert_to_nyquist():
                 st.session_state['sampling_frequency'] = st.session_state['signal_frequency']
         elif st.session_state['signal_sampling_frequency'] == 1.0:
             if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 2 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 2 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 1.5:
-            if len(st.session_state['frequencies']) > 0:
                 st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
             else:
                 st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 1.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
 
 
 # Adding layout to our page
