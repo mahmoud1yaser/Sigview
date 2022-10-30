@@ -44,6 +44,8 @@ For every digital signal processing system, sampling analog signals is crucial. 
 
 
 ## Demo:
+SigView.gif
 
+ 
 
 
