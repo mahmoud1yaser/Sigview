@@ -15,14 +15,17 @@ st.markdown(f'{header_code}', unsafe_allow_html=True)
 # Adding CSS edits to our single page app
 st.markdown("""
 <style>
-MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 .css-7oyrr6.euu6i2w0 {visibility: hidden;}
 .css-1aehpvj.euu6i2w0 {visibility: hidden;}
+.css-9ycgxx.exg6vvm12 {display: None;}
+.js-plotly-plot .plotly .ease-bg {display: none}
+.css-sab10m.e8zbici2 {display: None;}
+section[data-testid = "stFileUploadDropzone"] {height:85px;}
 .css-x8wxsk {
    padding: 0.5rem;
 }
-.block-container.css-18e3th9.egzxvld2 {padding: 30px 30px 30px 30px;}
+.block-container.css-18e3th9.egzxvld2 {padding: 0px 20px 0px 20px;}
 .container {
   width: 85%;
   padding-right: 50px;
@@ -83,7 +86,7 @@ if 'signal_frequency' not in st.session_state:
 if 'signal_amplitude' not in st.session_state:
     st.session_state['signal_amplitude'] = 1.
 
-
+# Define functions
 def addedSignalsList():
     addedSignals = st.session_state['addedSignals']
     signals = []
@@ -104,7 +107,6 @@ def removeAddedSignals(removeSignalList, selectedSignal):
         index += 1
 
 
-# Define functions
 # Signal to Noise Ratio Code
 def add_noise(amplitude, snr):
     signalAvgPowerDB = 10 * np.log10(
@@ -147,15 +149,20 @@ def convert_to_nyquist():
     if not uploaded_csv:
         if st.session_state['signal_sampling_frequency'] == 0.5:
             if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = max(st.session_state['frequencies'])
+                st.session_state['sampling_frequency'] = 1 * max(st.session_state['frequencies'])
             else:
-                st.session_state['sampling_frequency'] = st.session_state['signal_frequency']
+                st.session_state['sampling_frequency'] = 1 * st.session_state['signal_frequency']
         elif st.session_state['signal_sampling_frequency'] == 1.0:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 2 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 2 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 1.5:
             if len(st.session_state['frequencies']) > 0:
                 st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
             else:
                 st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 1.5:
+        elif st.session_state['signal_sampling_frequency'] == 2:
             if len(st.session_state['frequencies']) > 0:
                 st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
             else:
@@ -168,15 +175,14 @@ toolbox_container = st.container()
 
 with show_signals_container:
     browse_position, save_position, _, show_main_signal_position, show_added_signal_position, show_recons_position, \
-    show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1.3, 1])
+        show_samples_position = st.columns([1.5, 0.2, 0.5, 1, 1, 1, 1])
 
     uploaded_csv = browse_position.file_uploader("Browse", type='csv', label_visibility='collapsed')
     # browse_position.markdown('<h3 style="text-align: center"> Toolbox </h3>', unsafe_allow_html=True)
-
-    show_main = show_main_signal_position.checkbox('Show Main Signal', value=True)
-    show_samples = show_samples_position.checkbox('Show Samples')
-    show_added_signal = show_added_signal_position.checkbox('Show Added Signal')
-    show_recons = show_recons_position.checkbox('Show Reconstructed Signal')
+    show_main = show_main_signal_position.checkbox('Main Signal', value=True)
+    show_samples = show_samples_position.checkbox('Samples')
+    show_added_signal = show_added_signal_position.checkbox('Added Signal')
+    show_recons = show_recons_position.checkbox('Reconstructed Signal')
 
 with toolbox_container:
     toolbox_left_position, toolbox_right_position, main_graph_position = st.columns([1.1, 1.1, 5])
@@ -187,7 +193,7 @@ with toolbox_container:
             st.session_state['sampling_frequency'] = st.slider('Sampling Frequency', min_value=1.0, max_value=150.,
                                                                step=.5, on_change=convert_to_nyquist, value=1.0)
         else:
-            signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=1.5,
+            signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=2.,
                                                   step=.5, on_change=convert_to_nyquist,
                                                   key="signal_sampling_frequency")
         signal_type = st.selectbox("Signal Type", ['sin(t)', 'cos(t)'], key='signal_type')
@@ -232,12 +238,12 @@ with toolbox_container:
         else:
             phase_degree = 0
         if not uploaded_csv:
-            return add_noise(st.session_state.signal_amplitude * np.sin(
-                2 * np.pi * st.session_state.signal_frequency * st.session_state['time'] +
+            return add_noise(signal_amplitude * np.sin(
+                2 * np.pi * signal_frequency * st.session_state['time'] +
                 phase_degree), st.session_state.signal_snr)
         else:
-            return add_noise(st.session_state.signal_amplitude * np.sin(
-                2 * np.pi * st.session_state.signal_frequency * st.session_state['time'] +
+            return add_noise(signal_amplitude * np.sin(
+                2 * np.pi * signal_frequency * st.session_state['time'] +
                 phase_degree) + st.session_state['amplitude'], st.session_state.signal_snr)
 
 
@@ -246,7 +252,6 @@ with toolbox_container:
         st.session_state['addedSignals'].append(signalArray)
         # Store all frequencies to get maximum frequency to find nyquist rate
         st.session_state['frequencies'].append(signal_frequency)
-
 
     # Get all the added Signals from the memory
     def get_added_signals():
@@ -295,24 +300,25 @@ with toolbox_container:
     # Data for plotting
     with main_graph_position:
         fig_sec = px.line(x=[0, 0], y=[0, 0], labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
-        fig_sec.update_layout(title_text='Signal Plot', title_x=0.5, font=dict(
+        fig_sec.update_layout(margin=dict(l=0, r=0, t=0, b=0), font=dict(
             family="Sans serif",
-            size=15, ))
+            size=15))
         if show_main:
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude'], name="Main Signal",
                                 marker=dict(size=10, color="#3C69E7"))
         if show_added_signal and len(st.session_state['addedSignals']) > 0:
+
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude_added'], name="Added Signal",
-                                marker=dict(size=10, color='#00FFFF'))
+                                marker=dict(size=10, color='green'))
         elif show_added_signal:
             fig_sec.add_scatter(x=[0, 0], y=[0, 0], name="Added Signal",
-                                marker=dict(size=10, color='#00FFFF'))
+                                marker=dict(size=10, color='green'))
 
         if show_samples:
             fig_sec.add_scatter(x=st.session_state['time_sampled'], y=st.session_state['amplitude_sampled'],
                                 mode="markers",
-                                marker=dict(size=10, color="#ff6700"),
-                                name="Sampled Signal")
+                                marker=dict(size=10, color="black"),
+                                name="Samples")
         if show_recons:
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude_recons'],
                                 name="Reconstructed Signal", marker=dict(size=10, color="#F75394"))
@@ -336,7 +342,6 @@ with toolbox_container:
         file_name='sigview_reconstructed.csv',
         mime='text/csv')
 
-    save_position.markdown('<br>', unsafe_allow_html=True)
     reset_button = save_position.button('🔄')
     if reset_button:
         st.session_state['sampling_frequency'] = 1
