@@ -76,7 +76,7 @@ if 'frequencies' not in st.session_state:
 if 'sampling_frequency' not in st.session_state:
     st.session_state['sampling_frequency'] = 1.
 if 'signal_sampling_frequency' not in st.session_state:
-    st.session_state['signal_sampling_frequency'] = 0.5
+    st.session_state['signal_sampling_frequency'] = 1.
 if 'signal_snr' not in st.session_state:
     st.session_state['signal_snr'] = 60
 if 'signal_type' not in st.session_state:
@@ -147,106 +147,107 @@ def signal_recons(time, sampled_time, sampled_amplitude):
 # Convert to nyquist frequency function
 def convert_to_nyquist():
     if not uploaded_csv:
-        if st.session_state['signal_sampling_frequency'] == 0.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 1 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 1 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 1.0:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 2 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 2 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 1.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 2.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 2.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 5 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 5 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 3.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 6 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 6 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 3.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 7 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 7 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 4:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 8 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 8 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 4.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 9 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 9 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 5.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 10 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 10 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 5.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 11 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 11 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 6.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 12 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 12 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 6.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 13 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 13 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 7.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 14 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 14 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 7.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 15 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 15 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 8.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 16 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 16 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 8.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 17 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 17 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 9.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 18 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 18 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 9.5:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 19 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 19 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 10.:
-            if len(st.session_state['frequencies']) > 0:
-                st.session_state['sampling_frequency'] = 20 * max(st.session_state['frequencies'])
-            else:
-                st.session_state['sampling_frequency'] = 20 * st.session_state['signal_frequency']
+        if len(st.session_state['frequencies']) > 0:
+            st.session_state['sampling_frequency'] = st.session_state['signal_sampling_frequency'] \
+                                                     * max(st.session_state['frequencies'])
+        else:
+            st.session_state['sampling_frequency'] = st.session_state['signal_sampling_frequency'] \
+                                                 * st.session_state['signal_frequency']
+# elif st.session_state['signal_sampling_frequency'] == 1.0:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 2 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 2 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 1.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 2.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 2.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 5 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 5 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 3.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 6 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 6 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 3.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 7 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 7 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 4:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 8 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 8 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 4.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 9 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 9 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 5.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 10 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 10 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 5.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 11 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 11 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 6.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 12 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 12 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 6.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 13 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 13 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 7.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 14 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 14 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 7.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 15 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 15 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 8.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 16 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 16 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 8.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 17 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 17 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 9.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 18 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 18 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 9.5:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 19 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 19 * st.session_state['signal_frequency']
+        # elif st.session_state['signal_sampling_frequency'] == 10.:
+        #     if len(st.session_state['frequencies']) > 0:
+        #         st.session_state['sampling_frequency'] = 20 * max(st.session_state['frequencies'])
+        #     else:
+        #         st.session_state['sampling_frequency'] = 20 * st.session_state['signal_frequency']
 
 
 # Adding layout to our page
@@ -277,8 +278,8 @@ with toolbox_container:
         else:
             sampling_mode = st.checkbox('Nyquist Sampling')
             if sampling_mode:
-                signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=10.,
-                                                      step=.5, on_change=convert_to_nyquist,
+                signal_sampling_frequency = st.slider('Nyquist Fmax', min_value=0.5, max_value=10., step=0.5,
+                                                      on_change=convert_to_nyquist,
                                                       key="signal_sampling_frequency")
             else:
                 st.session_state['sampling_frequency'] = st.slider('Sampling Frequency', min_value=1.0, max_value=150.,
