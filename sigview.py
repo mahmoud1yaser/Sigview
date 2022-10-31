@@ -125,9 +125,9 @@ def sample(time, amplitude, fs):
         points_per_indices = int((len(time) / time[-1]) / fs)
         if points_per_indices == 0:
             points_per_indices = 1
-        amplitude = amplitude[::points_per_indices]
-        time = time[::points_per_indices]
-        return time, amplitude
+        amplitude_s = amplitude[::points_per_indices]
+        time_s = time[::points_per_indices]
+        return time_s, amplitude_s
 
 
 # Reconstruction Code
@@ -278,7 +278,7 @@ with toolbox_container:
         else:
             sampling_mode = st.checkbox('Nyquist Sampling')
             if sampling_mode:
-                signal_sampling_frequency = st.slider('Nyquist Fmax', min_value=0.5, max_value=10., step=0.5,
+                signal_sampling_frequency = st.slider('Maximum Frequency', min_value=0.5, max_value=10., step=0.5,
                                                       on_change=convert_to_nyquist,
                                                       key="signal_sampling_frequency")
             else:
@@ -309,7 +309,7 @@ with toolbox_container:
             signal_range = len(df)
     else:
         # Generate signal
-        signal_range = 5
+        signal_range = 20
         st.session_state['time'] = np.linspace(0, signal_range, 1000)
         phase = 0
         if signal_type == "cos(t)":
@@ -390,7 +390,7 @@ with toolbox_container:
         fig_sec = px.line(x=[0, 0], y=[0, 0], labels={'x': 'Time(s)', 'y': 'Amplitude(mV)'})
         fig_sec.update_layout(margin=dict(l=0, r=0, t=0, b=0), font=dict(
             family="Sans serif",
-            size=15))
+            size=15),legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
         if show_main:
             fig_sec.add_scatter(x=st.session_state['time'], y=st.session_state['amplitude'], name="Main Signal",
                                 marker=dict(size=10, color="#3C69E7"))
