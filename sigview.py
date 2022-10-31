@@ -162,11 +162,91 @@ def convert_to_nyquist():
                 st.session_state['sampling_frequency'] = 3 * max(st.session_state['frequencies'])
             else:
                 st.session_state['sampling_frequency'] = 3 * st.session_state['signal_frequency']
-        elif st.session_state['signal_sampling_frequency'] == 2:
+        elif st.session_state['signal_sampling_frequency'] == 2.:
             if len(st.session_state['frequencies']) > 0:
                 st.session_state['sampling_frequency'] = 4 * max(st.session_state['frequencies'])
             else:
                 st.session_state['sampling_frequency'] = 4 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 2.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 5 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 5 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 3.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 6 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 6 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 3.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 7 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 7 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 4:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 8 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 8 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 4.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 9 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 9 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 5.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 10 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 10 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 5.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 11 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 11 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 6.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 12 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 12 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 6.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 13 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 13 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 7.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 14 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 14 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 7.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 15 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 15 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 8.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 16 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 16 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 8.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 17 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 17 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 9.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 18 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 18 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 9.5:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 19 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 19 * st.session_state['signal_frequency']
+        elif st.session_state['signal_sampling_frequency'] == 10.:
+            if len(st.session_state['frequencies']) > 0:
+                st.session_state['sampling_frequency'] = 20 * max(st.session_state['frequencies'])
+            else:
+                st.session_state['sampling_frequency'] = 20 * st.session_state['signal_frequency']
 
 
 # Adding layout to our page
@@ -189,25 +269,32 @@ with toolbox_container:
     with toolbox_left_position:
         signal_frequency = st.slider('Frequency', min_value=1., max_value=150., step=0.5, key='signal_frequency',
                                      on_change=convert_to_nyquist)
+        signal_type = st.selectbox("Signal Type", ['sin(t)', 'cos(t)'], key='signal_type')
+        signal_add = st.button('Add Signal')
         if uploaded_csv:
             st.session_state['sampling_frequency'] = st.slider('Sampling Frequency', min_value=1.0, max_value=150.,
                                                                step=.5, on_change=convert_to_nyquist, value=1.0)
         else:
-            signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=2.,
-                                                  step=.5, on_change=convert_to_nyquist,
-                                                  key="signal_sampling_frequency")
-        signal_type = st.selectbox("Signal Type", ['sin(t)', 'cos(t)'], key='signal_type')
-        signal_add = st.button('Add Signal')
+            sampling_mode = st.checkbox('Nyquist Sampling')
+            if sampling_mode:
+                signal_sampling_frequency = st.slider('Nyquist Frequency', min_value=0.5, max_value=10.,
+                                                      step=.5, on_change=convert_to_nyquist,
+                                                      key="signal_sampling_frequency")
+            else:
+                st.session_state['sampling_frequency'] = st.slider('Sampling Frequency', min_value=1.0, max_value=150.,
+                                                                   step=.5, on_change=convert_to_nyquist, value=1.0)
 
     with toolbox_right_position:
         signal_amplitude = st.slider('Amplitude', min_value=1., max_value=150., step=0.5, key='signal_amplitude')
-        signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, step=1, key='signal_snr')
-
         added_signals_list = addedSignalsList()
         signal_history = st.selectbox("Added Signals", added_signals_list)
         signal_remove = st.button('Remove Signal')
         if signal_remove:
             removeAddedSignals(added_signals_list, signal_history)
+        add_noise_check = st.checkbox('Add Noise')
+        signal_snr = st.slider('SNR(dB)', min_value=1, max_value=60, step=1, key='signal_snr',
+                               disabled=not add_noise_check)
+
     # Upload signal
     uploaded_df = pd.DataFrame()
     if uploaded_csv is not None:
@@ -344,7 +431,6 @@ with toolbox_container:
 
     reset_button = save_position.button('🔄')
     if reset_button:
-        st.session_state['sampling_frequency'] = 1
         for key in st.session_state:
             del st.session_state[key]
         st.experimental_rerun()
