@@ -1,25 +1,29 @@
-#    Semester:fall 2022
-#    Digital Signal processing course
+#    Semester: fall 2022
+#    Digital Signal Processing Course
 #    Task-1
 
-# Title: Sampling-Studio
-A digital signal processing website using streamlit, HTML and CSS where users browse or generate a signal to sample , and can reconstruct it based on The Nyquist–Shannon sampling theorem.
+<hr>
+
+# Title: SigView-Sampling-Studio
+A digital signal processing website made using streamlit and customized using HTML and CSS where users can browse, generate, add, sample, and reconstruct a signal based on The Nyquist–Shannon sampling theorem, and reconstruction is based on the Whittaker-Shannon interpolation formula.
+
+
+<hr>
 
 ## Team Members
-  * Mahmoud Yasser  -Sec: 2   -BN:  29
+  * Mahmoud Yaser  -Sec: 2   -BN:  30
   * Mohamed Salah   -Sec: 2   -BN:  19
   * Mariam Wael     -Sec: 2   -BN:  36
   * Shirouq Shawky  -Sec: 1   -BN:  46
 
+<hr>
+
 ## About:
  #### Team No.9
- We are class of 2024 biomedical engineering, Cairo university. We have designed this website for anyone who
- is interested in signal processing. Our website deals with the signals by plotting an original signal and controlling
- its feature through many parameters, any change in these parameters will be shown in the plot. We deal with sampled signals
- as well in an easy process with no time delay.
+We are class of 2024 Systems and Biomedical Engineering, at Cairo university. We have designed this website for anyone interested in digital signal processing. Our website deals with the signals by plotting the signal, transforming, and controlling it through many parameters, any change in these parameters will be shown in real-time in the plot.
   
 ## Introduction:
-For every digital signal processing system, sampling analog signals is crucial. by using The Nyquist-Shannon Sampling Theorem, which ensures complete signal recovery when sampling at a frequency twice that of actual signals.
+For every digital signal processing system, sampling analog signals is crucial. by using The Nyquist-Shannon Sampling Theorem, which ensures complete signal recovery when sampling at a frequency equals to double that of the maximum frequency of the combined signals.
 
 ## Tools:
   * Streamlit
@@ -27,25 +31,22 @@ For every digital signal processing system, sampling analog signals is crucial. 
   * CSS
 
 ## Features:
-  * Browsing signals from saved ones.
-  * Controlling signals by changing amplitude from (0:150) and frequency from(0:150hz).
-  * controling Nyquist frequency in range (0.50:1.5).
-  * controling signal to noise ratio (SNR) in range of (1:60dB).
-  * Choosing type of signal you want to add.
-  * Adding new signals and removing added ones from user-defined signal
-  * Saving the generated signals.
-  * Resizing/rescaling window.
-  * For the signal plot:
-    - you can select the signal you want to show from 4 check boxes:
-      - Main signal
-      - Added signal
-      - Reconstructed signal
-      - Samples
-
-
+* Browsing signals from your machine
+* Generate or Add signals by changing their amplitude and frequency
+* Choosing the type of signal you want to generate or add
+* Select and Remove added signals
+* Sampling by the normal or maximum frequency
+* Adding noise (SNR) to the signal with decibels
+* Saving the reconstructed signals
+* Responsive website
+* For the signal plot:
+  - you can select the signal you want to show from 4 checkboxes:
+    - Main signal
+    - Added signal
+    - Reconstructed signal
+    - Samples
+    
  ## Demo:
 ![](https://github.com/mahmoud1yaser/DSP_Task1_-9-/blob/main/demo.gif)
 
- 
-
-
+## Hosted Website:
